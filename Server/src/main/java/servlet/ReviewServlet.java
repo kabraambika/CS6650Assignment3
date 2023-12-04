@@ -20,6 +20,8 @@ import model.AlbumReviews;
 
 /**
  * Servlet for handling album reviews using RabbitMQ for communication.
+ *
+ * @author ambikakabra
  */
 @WebServlet(name = "ReviewServlet", value = "/review/*")
 public class ReviewServlet extends HttpServlet {

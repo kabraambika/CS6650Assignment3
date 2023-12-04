@@ -2,6 +2,7 @@ package model;
 
 /**
  * Represents album reviews information, including the album ID and whether the user liked or disliked the album.
+ * @author ambikakabra
  */
 public class AlbumReviews {
   private String albumId;

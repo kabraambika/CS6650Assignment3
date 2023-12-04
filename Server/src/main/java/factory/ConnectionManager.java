@@ -7,7 +7,7 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 
 /**
- * The ConnectionManager class is responsible for interacting with a MongoDB database to fetch album information and save new albums.
+ * The ConnectionManager class is responsible for interacting with a MongoDB database to fetch album information and save new albums and its reviews
  * @author ambikakabra
  */
 public class ConnectionManager {
