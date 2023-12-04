@@ -1,5 +1,6 @@
 package utils;
 
+import com.google.gson.Gson;
 import com.opencsv.CSVWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,8 +29,7 @@ public class LoadTester {
 
     HttpClient httpClient = HttpClient.newHttpClient();
     HttpRequest postAlbumRequest = postAlbumAPIRequest(IPAddr);
-    HttpRequest reviewLikeRequest = postReviewAPIRequest(IPAddr, "like");
-    HttpRequest reviewDislikeRequest = postReviewAPIRequest(IPAddr, "dislike");
+
 
     List<Thread> threads = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
@@ -71,10 +71,10 @@ public class LoadTester {
       }
     }
     startTime = System.currentTimeMillis();
-    loadTesting(threadGroupSize, numThreadGroups, IPAddr, delay, startTime, postAlbumRequest, reviewLikeRequest, reviewDislikeRequest);
+    loadTesting(threadGroupSize, numThreadGroups, IPAddr, delay, startTime, postAlbumRequest);
   }
 
-  private static void loadTesting(int threadGroupSize, int numThreadGroups, String ipAddr, int delay, Long startTime, HttpRequest postAlbumRequest, HttpRequest reviewLikeRequest, HttpRequest reviewDislikeRequest)
+  private static void loadTesting(int threadGroupSize, int numThreadGroups, String ipAddr, int delay, Long startTime, HttpRequest postAlbumRequest)
       throws InterruptedException, IOException {
     HttpClient httpClient = HttpClient.newHttpClient();
     ConcurrentLinkedQueue<Response> responses = new ConcurrentLinkedQueue<>();
@@ -89,6 +89,10 @@ public class LoadTester {
               try {
                 long postStartTime = System.currentTimeMillis();
                 HttpResponse<String> postResponse = httpClient.send(postAlbumRequest, HttpResponse.BodyHandlers.ofString());
+                ImageMetaData responseBody = new Gson().fromJson(postResponse.body(), ImageMetaData.class);
+                String albumID = responseBody.getAlbumID();
+                HttpRequest reviewLikeRequest = postReviewAPIRequest(ipAddr, "like", albumID);
+                HttpRequest reviewDislikeRequest = postReviewAPIRequest(ipAddr, "dislike", albumID);
                 long postEndTime = System.currentTimeMillis();
                 long getStartTimeLike1 = System.currentTimeMillis();
                 HttpResponse<String> reviewPostResponse1 = httpClient.send(reviewLikeRequest, HttpResponse.BodyHandlers.ofString());
@@ -97,9 +101,9 @@ public class LoadTester {
                 HttpResponse<String> reviewPostResponse2 = httpClient.send(reviewLikeRequest, HttpResponse.BodyHandlers.ofString());
                 long getEndTimeLike2 = System.currentTimeMillis();
                 long getStartTimeDislike1 = System.currentTimeMillis();
-                HttpResponse<String> reviewPostResponse = httpClient.send(reviewDislikeRequest, HttpResponse.BodyHandlers.ofString());
+                HttpResponse<String> reviewPostResponse3 = httpClient.send(reviewDislikeRequest, HttpResponse.BodyHandlers.ofString());
                 long getEndTimeDislike1 = System.currentTimeMillis();
-                if (reviewPostResponse.statusCode() >= STATUS_CODE_400
+                if (reviewPostResponse3.statusCode() >= STATUS_CODE_400
                     && reviewPostResponse1.statusCode() >= STATUS_CODE_400
                     && reviewPostResponse2.statusCode() >= STATUS_CODE_400
                     && postResponse.statusCode() >= STATUS_CODE_400) {
@@ -292,9 +296,9 @@ public class LoadTester {
     return fullRequestBody.getBytes(StandardCharsets.UTF_8);
   }
 
-  public static HttpRequest postReviewAPIRequest(String IPAddr, String likeornot) {
+  public static HttpRequest postReviewAPIRequest(String IPAddr, String likeornot, String albumID) {
     HttpRequest postReviewRequest = HttpRequest.newBuilder()
-        .uri(URI.create(IPAddr + "/Server_war/review/"+likeornot+"/656d65bd7297a056eb562eb4"))
+        .uri(URI.create(IPAddr + "/Server_war/review/"+likeornot+"/"+albumID))
         .POST(BodyPublishers.noBody())
         .build();
 

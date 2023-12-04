@@ -11,7 +11,7 @@ import org.bson.Document;
  * @author ambikakabra
  */
 public class ConnectionHelper {
-  private static String connectionString = "mongodb://ec2-34-210-17-11.us-west-2.compute.amazonaws.com:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.2";
+  private static String connectionString = "mongodb://localhost:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.2";
   private static MongoClient mongoClient = MongoClients.create(connectionString);
   private static MongoDatabase sampleTrainingDB = mongoClient.getDatabase("AlbumStore");
 

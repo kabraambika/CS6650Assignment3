@@ -26,7 +26,7 @@ public class RabbitMQConnectionManager {
   private static Channel channel;
 
   /** The default RabbitMQ server host name. */
-  private static final String HOST_NAME = "ec2-54-69-76-218.us-west-2.compute.amazonaws.com";
+  private static final String HOST_NAME = "localhost";
 
   /** The default RabbitMQ server port number. */
   private static final int HOST_PORT = 5672;
