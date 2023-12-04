@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Main-Class: 
+Class-Path: mongodb-driver-core-4.9.0.jar json-20230227.jar bson-record-
+ codec-4.9.0.jar slf4j-api-2.0.7.jar amqp-client-5.18.0.jar mongodb-driv
+ er-sync-4.9.0.jar gson-2.10.1.jar commons-io-2.11.0.jar bson-4.9.0.jar 
+ commons-fileupload-1.5.jar
+
